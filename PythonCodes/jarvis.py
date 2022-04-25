@@ -52,7 +52,6 @@ def takeCommand():
         return "None"
     return query
 
-
 def sendEmail(to, content):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
@@ -65,10 +64,18 @@ def sendEmail(to, content):
 if __name__ == "__main__":
     wishMe()
     while True:
-        # if 1:
-        query = takeCommand().lower()
+        # print("Press 'K' for input via keyboard\n \t\tor\nPress 'M' for input via microphone\n")
+        # speak("Press 'K' for input via keyboard\n \t\tor\nPress 'M' for input via microphone")
+        option = str(input())
+        if option == 'M' or option == 'm':
+            query = takeCommand().lower()
+        elif option == 'K' or option == 'k':
+            query = input("Type your query:\n")
+        else:
+            print("Enter valid input: ")
 
         # Logic for executing tasks based on query
+
         if 'wikipedia' in query:
             speak('Searching Wikipedia...')
             query = query.replace("wikipedia", "")
@@ -77,20 +84,64 @@ if __name__ == "__main__":
             print(results)
             speak(results)
 
-        elif 'open youtube' in query:
-            webbrowser.open("youtube.com")
+        elif 'youtube' in query:
 
-        elif 'open google' in query:
-            webbrowser.open("google.com")
+            if 'brave browser' in query:
+                url = "youtube.com" 
+                path = 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe %s'
+                webbrowser.get(path).open(url)
 
-        elif 'open stackoverflow' in query:
-            webbrowser.open("stackoverflow.com")
+            elif 'mozilla browser' or 'firefox browser' or 'mozilla firefox' in query:
+                url = "youtube.com" 
+                path = 'C:/Program Files/Mozilla Firefox/firefox.exe %s'
+                webbrowser.get(path).open(url)
+
+            else:
+                url = "youtube.com"
+                path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+                webbrowser.get(path).open(url)
+
+        elif 'google' in query:
+
+            if 'brave browser' in query:
+                url = "youtube.com" 
+                path = 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe %s'
+                webbrowser.get(path).open(url)
+
+            elif 'mozilla browser' or 'firefox browser' or 'mozilla firefox' in query:
+                url = "youtube.com" 
+                path = 'C:/Program Files/Mozilla Firefox/firefox.exe %s'
+                webbrowser.get(path).open(url)
+            
+            else:
+                url = "google.com"
+                path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+                webbrowser.get(path).open(url)
+
+        elif 'stackoverflow' in query:
+
+            if 'brave browser' in query:
+                url = "youtube.com" 
+                path = 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe %s'
+                webbrowser.get(path).open(url)
+
+            elif 'mozilla browser' or 'firefox browser' or 'mozilla firefox' in query:
+                url = "youtube.com" 
+                path = 'C:/Program Files/Mozilla Firefox/firefox.exe %s'
+                webbrowser.get(path).open(url)
+
+            else:
+                url = "stackoverflow.com"
+                path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+                webbrowser.get(path).open(url)
 
         elif 'play music' in query:
             music_dir = 'D:\\Music'
             songs = os.listdir(music_dir)
             print(songs)
             os.startfile(os.path.join(music_dir, songs[0]))
+            # add to play specific music
+
 
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")
@@ -104,7 +155,7 @@ if __name__ == "__main__":
             codePath = "D:\\Music"
             os.startfile(codePath)
 
-        elif 'email to harry' in query:
+        elif 'send email' in query:
             try:
                 speak("What should I say?")
                 content = takeCommand()
