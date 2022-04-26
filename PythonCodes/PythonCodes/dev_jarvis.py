@@ -8,11 +8,24 @@ import pyautogui
 from plyer import notification
 from bs4 import BeautifulSoup
 import requests
+import smtplib
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
 
+def wishMe():
+    hour = int(datetime.datetime.now().hour)
+    if hour >= 0 and hour < 12:
+        speak_va("Good Morning!")
+
+    elif hour >= 12 and hour < 18:
+        speak_va("Good Afternoon!")
+
+    else:
+        speak_va("Good Evening!")
+
+    speak_va("I am Jarvis Sir. Please tell me how may I help you")
 
 def input_query():
     recognizer = sr.Recognizer()
@@ -27,6 +40,9 @@ def input_query():
         except Exception as ex:
             print('An exception occurred', ex)
 
+def input_query_keyboard():
+    query = input("Please type your query: ")
+    return query
 
 def report_time():
     current_time = datetime.datetime.now().strftime('%I:%M %p')
@@ -37,12 +53,28 @@ def speak_va(transcribed_query):
     engine.say(transcribed_query)
     engine.runAndWait()
 
+def sendEmail(to, content):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.login('zoheb.412010.cs@mhssce.ac.in', 'artificiallearning&machineintelligence')
+    server.sendmail('zoheb.412010.cs@mhssce.ac.in', to, content)
+    server.close()
+
 def make_request(url):
   response = requests.get(url)
   return response.text
 
 def activate_va():
-    user_query = input_query()
+    print('''Press M for query via Microphone
+            or
+Press K for query via keyboard''')
+    wishMe()
+    choice = str(input())
+    if choice == 'K' or choice == 'k':
+        user_query = input_query_keyboard()
+    elif choice == 'M' or choice == 'm':
+        user_query = input_query()
     print('user query ....', user_query)
     if 'time' in user_query:
         current_time = report_time()
@@ -50,54 +82,69 @@ def activate_va():
         speak_va(f"the current time is {current_time}")
     elif 'youtube' in user_query:
 
-        if 'brave browser' in user_query:
-            url = "youtube.com" 
-            path = 'C:/Program Files/BraveSoftware/Brave-Browser/Applicatio brave.exe %s'
+        if 'brave' in user_query:
+            url = "https://www.youtube.com/" 
+            path = 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe %s'
             webbrowser.get(path).open(url)
 
-        elif 'mozilla browser' or 'firefox browser' or 'mozilla firefox' in user_query:
-            url = "youtube.com" 
+        elif 'mozilla' or 'firefox' in user_query:
+            url = "https://www.youtube.com/" 
             path = 'C:/Program Files/Mozilla Firefox/firefox.exe %s'
             webbrowser.get(path).open(url)
 
+        if 'chrome' in user_query:
+            url = "https://www.youtube.com/"
+            path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.ex  %s'
+            webbrowser.get(path).open(url)
+
         else:
-            url = "youtube.com"
+            url = "https://www.youtube.com/"
             path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.ex  %s'
             webbrowser.get(path).open(url)
 
     elif 'google' in user_query:
 
-        if 'brave browser' in user_query:
-            url = "youtube.com" 
-            path = 'C:/Program Files/BraveSoftware/Brave-Browser/Applicatio brave.exe %s'
+        if 'brave' in user_query:
+            url = "https://www.google.com/" 
+            path = 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe %s'
             webbrowser.get(path).open(url)
 
-        elif 'mozilla browser' or 'firefox browser' or 'mozilla firefox' in user_query:
-            url = "youtube.com" 
+        elif 'mozilla' or 'firefox' in user_query:
+            url = "https://www.google.com/" 
             path = 'C:/Program Files/Mozilla Firefox/firefox.exe %s'
             webbrowser.get(path).open(url)
-            
+
+        if 'chrome' in user_query:
+            url = "https://www.google.com/"
+            path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+            webbrowser.get(path).open(url)
+
         else:
-            url = "google.com"
+            url = "https://www.google.com/"
             path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
             webbrowser.get(path).open(url)
 
     elif 'stackoverflow' in user_query:
 
-        if 'brave browser' in user_query:
-            url = "youtube.com" 
+        if 'brave' in user_query:
+            url = "https://stackoverflow.com/" 
             path = 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe %s'
             webbrowser.get(path).open(url)
 
-        elif 'mozilla browser' or 'firefox browser' or 'mozilla firefox' in user_query:
-            url = "youtube.com" 
+        elif 'mozilla' or 'firefox' in user_query:
+            url = "https://stackoverflow.com/" 
             path = 'C:/Program Files/Mozilla Firefox/firefox.exe %s'
+            webbrowser.get(path).open(url)
+
+        elif 'chrome' in user_query:
+            url = "https://stackoverflow.com/"
+            path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
             webbrowser.get(path).open(url)
         
         else:
-                url = "stackoverflow.com"
-                path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
-                webbrowser.get(path).open(url)
+            url = "https://stackoverflow.com/"
+            path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+            webbrowser.get(path).open(url)
 
     elif 'open website' in user_query:
         speak_va(
@@ -146,6 +193,18 @@ def activate_va():
             webbrowser.get(
                 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe %s').open(search_url)
             speak_va(f"here are the results for the search term: {search_term}")
+    
+    elif 'send email' in user_query:
+            try:
+                speak_va("What should I say?")
+                content = input_query()
+                to = input("Enter the recipient email id.")
+                sendEmail(to, content)
+                print("Email has been sent!")
+                speak_va("Email has been sent!")
+            except Exception as e:
+                print(e)
+                speak_va("Sorry my friend Zoheb. I am not able to send this email")
 
     elif 'covid stats' in user_query:
       html_data = make_request('https://www.worldometers.info/coronavirus/')
